@@ -50,6 +50,7 @@
   "dependencies": {
     "@babel/runtime": "^7.5.5",
     "prop-types": "^15.7.2",
+    "quagga": "^0.12.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
   }
