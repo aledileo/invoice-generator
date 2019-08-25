@@ -1,8 +1,8 @@
 import React from 'react';
-import ProductContext from './contexts/ProductContext';
 import QrScanner from 'qr-scanner';
-import QrScannerWorkerPath from "!!file-loader!../node_modules/qr-scanner/qr-scanner-worker.min.js";
+import QrScannerWorkerPath from "!!file-loader!../../node_modules/qr-scanner/qr-scanner-worker.min.js";
 import { makeStyles } from '@material-ui/core/styles';
+import ProductContext from '../contexts/ProductContext';
 
 QrScanner.WORKER_PATH = QrScannerWorkerPath;
 

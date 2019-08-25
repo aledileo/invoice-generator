@@ -1,5 +1,4 @@
 import React from 'react'
-import useFetch from '../hooks/useFetch'
 
 
 const ProductContext = React.createContext();
@@ -24,7 +23,7 @@ export function ProductContextProvider(props) {
       setIsLoading(true);
       const response = await fetch(url, options);
       const data = await response.json();
-      setProduct(data.name);
+      setProduct(data);
       setIsLoading(false);
     } catch (e) {
       setError(e);
