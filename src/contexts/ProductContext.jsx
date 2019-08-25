@@ -13,7 +13,7 @@ const options = {
 const productsUrl = 'https://invoice-generator.free.beeceptor.com/product'
 
 export function ProductContextProvider(props) {
-  const [product, setProduct] = React.useState('');
+  const [products, setProducts] = React.useState([]);
   const [error, setError] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -23,7 +23,22 @@ export function ProductContextProvider(props) {
       setIsLoading(true);
       const response = await fetch(url, options);
       const data = await response.json();
-      setProduct(data);
+      const duplicated = products.find(x => x.id === data.id)
+      if (duplicated) {
+        const filteredProducts = products.filter(x => x.id !== data.id);
+        setProducts(
+          [
+            ...filteredProducts,
+            {
+              ...duplicated,
+              qty: (duplicated.qty ? duplicated.qty + 1 : 2)
+            }
+          ]
+        );
+
+      } else {
+        setProducts([...products, data]);
+      }
       setIsLoading(false);
     } catch (e) {
       setError(e);
@@ -33,7 +48,7 @@ export function ProductContextProvider(props) {
   };
   
   return (
-    <ProductContext.Provider value={{ product, error, isLoading, handleProductRequest }}>
+    <ProductContext.Provider value={{ products, error, isLoading, handleProductRequest }}>
       {props.children}
     </ProductContext.Provider>
   )
