@@ -1,44 +1,48 @@
-import React, { useEffect } from 'react'
-import Quagga from 'quagga';
+import React from 'react';
+import ProductContext from './contexts/ProductContext';
+import QrScanner from 'qr-scanner';
+import QrScannerWorkerPath from "!!file-loader!../node_modules/qr-scanner/qr-scanner-worker.min.js";
+import { makeStyles } from '@material-ui/core/styles';
 
-const quaggaOpts = {
-  inputStream: {
-    type : "LiveStream",
-    constraints: {
-      width: 640,
-      height: 480,
-      facingMode: "environment"
-    }
-  },
-  locator: {
-    patchSize: "medium",
-    halfSample: true
-  },
-  numOfWorkers: 1,
-  decoder: {
-      readers : [ "code_128_reader"]
-  },
-  locate: true
-};
+QrScanner.WORKER_PATH = QrScannerWorkerPath;
 
-const quaggaCallback = err => {
-  if (err) {
-    return console.log(err)
+const useStyles = makeStyles(theme => ({
+  videoWrapper: {
+    margin: '8px auto',
+    width: '90vw'
+  },
+  video: {
+    width: "90vw",
   }
-  Quagga.start();
-}
+}));
 
-function Scanner({ setIsScanning, isScanning, setResult }) {
-  useEffect(() => {
-    Quagga.init(quaggaOpts, quaggaCallback);
-    Quagga.onDetected(result => {
+function Scanner({ setIsScanning, isScanning }) {
+  
+  const { handleProductRequest } = React.useContext(ProductContext);
+
+  let videoElement;
+  let qrScanner;
+
+  React.useEffect(() => {
+    qrScanner = new QrScanner(videoElement, result => {
       setIsScanning(false);
-      setResult(result);
+      handleProductRequest(result);
     });
-    return () => Quagga.stop();
+    qrScanner.start(); 
+    return () => {
+      qrScanner.destroy();
+      qrScanner = null;
+    };
   }, [isScanning]);
+
+  const classes = useStyles();
   return (
-    <div id="interactive" className="viewport" />
+    <div className={classes.videoWrapper}>
+      <video
+        ref={el => videoElement = el}
+        className={classes.video}
+      />
+    </div>
   )
 }
 
