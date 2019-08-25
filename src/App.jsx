@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Scanner from "./components/Scanner";
+import Scanner from './components/Scanner';
 import BottomBar from './components/BottomBar';
-
+import Summary from './components/Summary';
 
 const App = () => {
   const [isScanning, setIsScanning] = useState(false);
@@ -15,7 +15,7 @@ const App = () => {
         <Scanner
           setIsScanning={setIsScanning}
           isScanning={isScanning}
-        /> : null
+        /> : <Summary />
       }
       <BottomBar
         cameraHandler={cameraHandler}
